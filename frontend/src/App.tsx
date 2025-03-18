@@ -1,6 +1,7 @@
 import "./App.css"
 import { Counter } from "./features/counter/Counter"
-import { Quotes } from "./features/quotes/Quotes"
+import { Employees } from "./features/employees/Employees"
+// import { Quotes } from "./features/quotes/Quotes"
 import logo from "./logo.svg"
 
 const App = () => {
@@ -12,7 +13,8 @@ const App = () => {
         <p>
           Edit <code>src/App.tsx</code> and save to reload.
         </p>
-        <Quotes />
+        {/* <Quotes /> */}
+        <Employees />
         <span>
           <span>Learn </span>
           <a
