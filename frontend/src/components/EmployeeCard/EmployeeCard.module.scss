@@ -1,0 +1,41 @@
+.container {
+  font-size: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  border-bottom: 1px solid black;
+  &:first-child {
+    border-top: 1px solid black;
+  }
+  &:last-child {
+    border-bottom: none;
+  }
+  padding-top: 1em;
+  padding-bottom: 1em;
+}
+.title {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+.full_name {
+  font-weight: bold;
+  margin-top: 0.25rem;
+  margin-bottom: 0.25rem;
+}
+.link_container {
+  //   margin: 0;
+  display: flex;
+  flex-direction: row;
+  //   gap: 1em;
+}
+.tenure {
+  margin-top: 0.25rem;
+  margin-bottom: 0.25rem;
+  //   margin: 0;
+}
+.email {
+  margin-top: 0.25rem;
+  margin-bottom: 0.25rem;
+  //   margin: 0;
+}

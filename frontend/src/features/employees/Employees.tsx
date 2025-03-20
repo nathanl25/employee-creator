@@ -1,6 +1,10 @@
 // import { useState } from 'react';
+// import classes from "./Employees.modules.scss"
+import classes from "./Employees.module.scss"
+import Button from "../../components/Button/Button"
 import { useGetQuotesQuery } from "../quotes/quotesApiSlice"
 import { useGetEmployeesQuery } from "./employeesApiSlice"
+import EmployeeCard from "../../components/EmployeeCard/EmployeeCard"
 
 export const Employees = () => {
   const { data, isError, isLoading, isSuccess } = useGetEmployeesQuery()
@@ -24,15 +28,18 @@ export const Employees = () => {
   if (isSuccess) {
     // console.log(data)
     return (
-      <div>
-        <h2>Employees:</h2>
-        {data.map(val => (
-          <h2 key={val.id}>{val.firstName}</h2>
-        ))}
-        {/* {data.employees.map(val => (
-          <h2>{val.firstName}</h2>
-        ))} */}
-      </div>
+      <section className={classes.container}>
+        <div className={classes.instructions}>
+          <p>Please click on 'Edit' to find more details of each employee.</p>
+          <Button variant="add">Add Employee</Button>
+        </div>
+        <div>
+          {data.map(val => (
+            // <h2 key={val.id}>{val.firstName}</h2>
+            <EmployeeCard data={val} key={val.id} />
+          ))}
+        </div>
+      </section>
     )
   }
 }

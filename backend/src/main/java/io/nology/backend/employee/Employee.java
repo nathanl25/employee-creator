@@ -1,6 +1,10 @@
 package io.nology.backend.employee;
 
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collector;
@@ -11,6 +15,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import io.nology.backend.common.BaseEntity;
 import io.nology.backend.contract.Contract;
+import io.nology.backend.contract.Contract.EmploymentStatus;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -145,5 +150,31 @@ public class Employee extends BaseEntity {
                 (acc, curr) -> {
                     return acc.getUpdatedAt().getTime() > curr.getUpdatedAt().getTime() ? acc : curr;
                 });
+    }
+
+    public int getYearsWorked() {
+        if (contracts.isEmpty()) {
+            return 0;
+        }
+        // return 0;
+        Contract firstContract = contracts.stream().reduce(contracts.getFirst(),
+                (acc, curr) -> {
+                    return acc.getStartDate().getTime() < curr.getStartDate().getTime() ? acc : curr;
+                });
+
+        Calendar stCal = Calendar.getInstance();
+        stCal.setTime(firstContract.getStartDate());
+        Calendar today = Calendar.getInstance();
+        return today.get(Calendar.YEAR) - stCal.get(Calendar.YEAR);
+    }
+
+    public EmploymentStatus getCurrentEmploymentStatus() {
+        if (contracts.isEmpty()) {
+            return null;
+        }
+        return contracts.stream().reduce(contracts.getFirst(),
+                (acc, curr) -> {
+                    return acc.getStartDate().getTime() > curr.getStartDate().getTime() ? acc : curr;
+                }).getStatus();
     }
 }

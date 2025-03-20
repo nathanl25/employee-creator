@@ -11,11 +11,13 @@ import {
   selectCount,
   selectStatus,
 } from "./counterSlice"
+import { setHeading } from "../header/headerSlice"
 
 export const Counter = () => {
   const dispatch = useAppDispatch()
   const count = useAppSelector(selectCount)
   const status = useAppSelector(selectStatus)
+  dispatch(setHeading("Counter"))
   const [incrementAmount, setIncrementAmount] = useState("2")
 
   const incrementValue = Number(incrementAmount) || 0

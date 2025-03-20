@@ -2,10 +2,20 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react"
 // import { quotesApiSlice } from '../quotes/quotesApiSlice'
 // import { build } from 'vite'
 
-interface Employee {
+type EmployeeStatus = "PEMANENT" | "CONTRACTOR"
+
+export interface Employee {
   id: number
   firstName: string
   lastName: string
+  middleName?: string
+  email: string
+  yearsWorked: number
+  currentEmploymentStatus: EmployeeStatus
+}
+
+export interface EmployeeProps {
+  data: Employee
 }
 
 // interface EmployeesApiResponse {
@@ -20,6 +30,13 @@ export const employeesApiSlice = createApi({
     getEmployees: build.query<Employee[], void>({
       query: () => "/employee",
     }),
+    // deleteEmployee: build.mutation<{ success: string, id: number}, number>({
+    //   query(id) {
+    //     return {
+
+    //     }
+    //   }
+    // })
   }),
 })
 
