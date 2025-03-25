@@ -77,11 +77,11 @@ public class EmployeeController {
     }
 
     @DeleteMapping("/{id}/contract/{contractId}")
-    public ResponseEntity<String> deleteEmployeeContract(@PathVariable long id, @PathVariable long contractId)
+    public ResponseEntity<Void> deleteEmployeeContract(@PathVariable long id, @PathVariable long contractId)
             throws NotFoundException, ServiceValidationException {
         Contract toBeDeleted = this.contractService.getContractById(contractId).orElseThrow(
                 () -> new NotFoundException("Could not find a contract belonging to this ID"));
         this.employeeService.deleteContract(id, toBeDeleted);
-        return new ResponseEntity<>("Contract of employee has been deleted", HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

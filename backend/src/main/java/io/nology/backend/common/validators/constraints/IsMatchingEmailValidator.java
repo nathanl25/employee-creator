@@ -28,13 +28,22 @@ public class IsMatchingEmailValidator implements ConstraintValidator<IsMatchingE
         }
         Object valueA = new BeanWrapperImpl(value).getPropertyValue(field);
         Object valueB = new BeanWrapperImpl(value).getPropertyValue(matchingField);
-
-        if (valueA != null) {
-            return valueA.equals(valueB);
-        } else {
-
-            return valueB == null;
+        if (valueA == null && valueA == null) {
+            return true;
         }
+        if (valueA == null || valueB == null) {
+            context.disableDefaultConstraintViolation();
+            context.buildConstraintViolationWithTemplate("Email fields must not be empty")
+                    .addConstraintViolation();
+            return false;
+        }
+        if (!valueA.equals(valueB)) {
+            context.disableDefaultConstraintViolation();
+            context.buildConstraintViolationWithTemplate("Entered emails do not match")
+                    .addConstraintViolation();
+            return false;
+        }
+        return true;
     }
 
 }

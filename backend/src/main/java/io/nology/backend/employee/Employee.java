@@ -1,13 +1,8 @@
 package io.nology.backend.employee;
 
-import java.time.LocalDate;
-import java.time.Period;
-import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -23,10 +18,7 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.OrderBy;
 import jakarta.persistence.Table;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
 
 @Entity
 @Table(name = "employees")
@@ -55,7 +47,7 @@ public class Employee extends BaseEntity {
     @Column(nullable = false)
     private String address;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     @JoinTable(name = "employee_contracts", joinColumns = @JoinColumn(name = "employee_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "contract_id", referencedColumnName = "id"))
     private List<Contract> contracts = new ArrayList<>();
 
@@ -156,7 +148,6 @@ public class Employee extends BaseEntity {
         if (contracts.isEmpty()) {
             return 0;
         }
-        // return 0;
         Contract firstContract = contracts.stream().reduce(contracts.getFirst(),
                 (acc, curr) -> {
                     return acc.getStartDate().getTime() < curr.getStartDate().getTime() ? acc : curr;

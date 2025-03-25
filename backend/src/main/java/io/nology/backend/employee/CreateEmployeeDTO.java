@@ -8,18 +8,16 @@ import io.nology.backend.contract.Contract.EmploymentBasis;
 import io.nology.backend.contract.Contract.EmploymentStatus;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-// import io.nology.backend.common.validators.Matches;
-import jakarta.validation.constraints.AssertTrue;
+
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
-// import jakarta.validation.constraints.FutureOrPresent;
+
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-// import jakarta.validation.constraints.PastOrPresent;
+
 import jakarta.validation.constraints.Size;
 
-// @Matches(field = "email", matchingField = "emailConfirmation", message = "Password Confirm does not Match Password")
 @HasValidDates(startDate = "startDate", endDate = "endDate", isOngoing = "isOngoing")
 @IsMatchingEmail(field = "email", matchingField = "emailConfirmation", message = "test")
 public class CreateEmployeeDTO {
@@ -28,7 +26,7 @@ public class CreateEmployeeDTO {
     @Size(min = 3, max = 20, message = "First Name must be between 3 and 20 characters")
     private String firstName;
 
-    @Size(min = 3, max = 20, message = "Middle Name must be between 3 and 20 characters")
+    @Size(min = 1, max = 20, message = "Middle Name must be between 1 and 20 characters")
     private String middleName;
 
     @NotBlank

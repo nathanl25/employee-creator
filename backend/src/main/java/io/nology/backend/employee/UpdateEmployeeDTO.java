@@ -10,7 +10,7 @@ public class UpdateEmployeeDTO {
     @Size(min = 3, max = 20, message = "First Name must be between 3 and 20 characters")
     private String firstName;
 
-    @Size(min = 3, max = 20, message = "Middle Name must be between 3 and 20 characters")
+    @Size(min = 1, max = 20, message = "Middle Name must be between 1 and 20 characters")
     private String middleName;
 
     @Size(min = 3, max = 20, message = "Last Name must be between 3 and 20 characters")

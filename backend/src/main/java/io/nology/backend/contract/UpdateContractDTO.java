@@ -3,6 +3,10 @@ package io.nology.backend.contract;
 import java.util.Date;
 
 import io.nology.backend.common.validators.HasValidDates;
+import io.nology.backend.contract.Contract.EmploymentBasis;
+import io.nology.backend.contract.Contract.EmploymentStatus;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
@@ -20,6 +24,12 @@ public class UpdateContractDTO implements ContractDTO {
     @Max(40)
     private int weeklyHours;
 
+    @Enumerated(EnumType.STRING)
+    private EmploymentStatus status;
+
+    @Enumerated(EnumType.STRING)
+    private EmploymentBasis basis;
+
     public Date getStartDate() {
         return startDate;
     }
@@ -34,5 +44,13 @@ public class UpdateContractDTO implements ContractDTO {
 
     public int getWeeklyHours() {
         return weeklyHours;
+    }
+
+    public EmploymentStatus getStatus() {
+        return status;
+    }
+
+    public EmploymentBasis getBasis() {
+        return basis;
     }
 }

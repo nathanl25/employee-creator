@@ -1,7 +1,6 @@
 package io.nology.backend.employee;
 
 import java.util.List;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
@@ -12,9 +11,9 @@ import io.nology.backend.common.exceptions.NotFoundException;
 import io.nology.backend.common.exceptions.ServiceValidationException;
 import io.nology.backend.contract.Contract;
 import io.nology.backend.contract.ContractDTO;
+import io.nology.backend.contract.ContractService;
 import io.nology.backend.contract.CreateContractDTO;
 import io.nology.backend.contract.UpdateContractDTO;
-import jakarta.validation.Valid;
 
 @Service
 public class EmployeeService {
@@ -23,9 +22,12 @@ public class EmployeeService {
 
     private ModelMapper mapper;
 
-    EmployeeService(EmployeeRepository repo, ModelMapper mapper) {
+    private ContractService contractService;
+
+    EmployeeService(EmployeeRepository repo, ModelMapper mapper, ContractService contractService) {
         this.repo = repo;
         this.mapper = mapper;
+        this.contractService = contractService;
     }
 
     public Employee createEmployee(CreateEmployeeDTO data) {
@@ -45,6 +47,7 @@ public class EmployeeService {
         Employee currEmployee = this.repo.findById(id)
                 .orElseThrow(() -> new NotFoundException("Could not find an employee with this id"));
         mapper.map(data, currEmployee);
+        this.repo.save(currEmployee);
         return currEmployee;
     }
 
@@ -52,7 +55,6 @@ public class EmployeeService {
         ValidationErrors err = new ValidationErrors();
         Employee currEmployee = this.repo.findById(id)
                 .orElseThrow(() -> new NotFoundException("Could not find an employee with this id"));
-        // Contract latestContract = currEmployee.getMostRecentContract();
         validateContractDates(err, data, currEmployee.getContracts());
         if (!err.isEmpty()) {
             throw new ServiceValidationException(err);
@@ -62,29 +64,6 @@ public class EmployeeService {
         currEmployee.addContract(newContract);
         this.repo.saveAndFlush(currEmployee);
         return currEmployee.getMostRecentlyUpdatedContract();
-        // List<Contract> existingContracts = currEmployee.getContracts();
-        // for (Contract c : currEmployee.getContracts()) {
-        // long cStart = c.getStartDate().getTime();
-        // long cEnd = c.isOngoing() ? Long.MAX_VALUE : c.getEndDate().getTime();
-        // long dataStart = data.getStartDate().getTime();
-        // long dataEnd = data.isOngoing() ? Long.MAX_VALUE : c.getEndDate().getTime();
-        // if (dataStart <= cStart && dataEnd >= cEnd) {
-        // err.addError("contract", "Existing contract cannot exist inbetween date of
-        // new contract");
-        // break;
-        // }
-        // if (dataStart >= cStart && dataStart <= cEnd) {
-        // err.addError("contract", "New contract cannot start inbetween dates of
-        // existing contract");
-        // break;
-        // }
-        // if (dataEnd >= cStart && dataEnd <= cEnd) {
-        // err.addError("contract", "New contract cannot end inbetween dates of existing
-        // contract");
-        // break;
-        // }
-
-        // }
     }
 
     private void validateContractDates(ValidationErrors errors, ContractDTO proposedContract,
@@ -122,6 +101,9 @@ public class EmployeeService {
                 .filter(c -> c.getId() != toBeUpdated.getId())
                 .collect(Collectors.toList());
         validateContractDates(errors, data, currentContracts);
+        if (!errors.isEmpty()) {
+            throw new ServiceValidationException(errors);
+        }
         mapper.map(data, toBeUpdated);
         this.repo.saveAndFlush(currEmployee);
         return toBeUpdated;
@@ -130,8 +112,8 @@ public class EmployeeService {
     public void deleteEmployee(long id) throws NotFoundException {
         Employee currEmployee = this.repo.findById(id)
                 .orElseThrow(() -> new NotFoundException("Could not find an employee with this id"));
-        currEmployee.removeAllContracts();
         this.repo.delete(currEmployee);
+
     }
 
     public void deleteContract(long id, Contract toBeDeleted) throws NotFoundException, ServiceValidationException {
@@ -149,7 +131,9 @@ public class EmployeeService {
         if (!errors.isEmpty()) {
             throw new ServiceValidationException(errors);
         }
+        long contractId = toBeDeleted.getId();
         currEmployee.removeContract(toBeDeleted);
+        this.contractService.deleteById(contractId);
         this.repo.saveAndFlush(currEmployee);
     }
 }
