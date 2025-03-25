@@ -1,8 +1,4 @@
-// import { useContext } from 'react';
-
-// import React from 'react'
 import classes from "./Button.module.scss"
-// import { ButtonContext } from '../../context/ButtonContextProvider';
 
 interface ButtonProps
   extends React.DetailedHTMLProps<
@@ -14,11 +10,10 @@ interface ButtonProps
 
 const Button = ({
   variant = "default",
-  // size = 'medium',
+
   children,
   ...rest
 }: ButtonProps) => {
-  //   const { editVisibility } = useContext(ButtonContext);
   return (
     <button className={`${classes[variant]} ${classes.large}`} {...rest}>
       {children}

@@ -18,3 +18,14 @@
     cursor: pointer;
   }
 }
+@mixin input($width) {
+  height: 40%;
+  max-height: 1.75em;
+  font-size: 1.25rem;
+  width: $width;
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+  padding-left: 1.25rem;
+  border-radius: 10px;
+  border: 2px solid gray;
+}

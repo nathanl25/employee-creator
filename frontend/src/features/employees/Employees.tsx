@@ -1,10 +1,9 @@
-// import { useState } from 'react';
-// import classes from "./Employees.modules.scss"
 import classes from "./Employees.module.scss"
 import Button from "../../components/Button/Button"
-import { useGetQuotesQuery } from "../quotes/quotesApiSlice"
+
 import { useGetEmployeesQuery } from "./employeesApiSlice"
 import EmployeeCard from "../../components/EmployeeCard/EmployeeCard"
+import { Link } from "react-router"
 
 export const Employees = () => {
   const { data, isError, isLoading, isSuccess } = useGetEmployeesQuery()
@@ -26,16 +25,16 @@ export const Employees = () => {
   }
 
   if (isSuccess) {
-    // console.log(data)
     return (
       <section className={classes.container}>
         <div className={classes.instructions}>
           <p>Please click on 'Edit' to find more details of each employee.</p>
-          <Button variant="add">Add Employee</Button>
+          <Link to="/create">
+            <Button variant="add">Add Employee</Button>
+          </Link>
         </div>
         <div>
           {data.map(val => (
-            // <h2 key={val.id}>{val.firstName}</h2>
             <EmployeeCard data={val} key={val.id} />
           ))}
         </div>
